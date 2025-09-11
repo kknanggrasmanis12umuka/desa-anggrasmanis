@@ -54,7 +54,7 @@ const CreatePostPage = () => {
     }
 
     // Validasi ukuran file (maksimal 2MB)
-    if (file.size > 2 * 1024 * 1024) {
+    if (file.size > 5 * 1024 * 1024) {
       alert('Ukuran file maksimal 2MB');
       return;
     }
