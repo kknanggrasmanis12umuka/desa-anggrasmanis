@@ -210,7 +210,7 @@ export default function VillageProfilePage() {
                 {profiles.map(profile => (
                   <Link
                     key={profile.id}
-                    href={`/profil-desa/${profile.section}`}
+                    href={`/profile/${profile.section}`}
                     className="flex items-center p-3 text-sm text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
                   >
                     <span className="bg-primary-100 text-primary-600 rounded-full w-6 h-6 flex items-center justify-center text-xs font-medium mr-2">
