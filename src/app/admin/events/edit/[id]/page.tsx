@@ -21,22 +21,48 @@ const EditEventPage = () => {
     { label: 'Edit Acara' }
   ];
 
+  // Fungsi untuk mengubah format data event menjadi format form
+  const formatEventForForm = (eventData: any) => {
+    if (!eventData) return null;
+    
+    return {
+      title: eventData.title || '',
+      description: eventData.description || '',
+      content: eventData.content || '',
+      startDate: eventData.startDate || '',
+      endDate: eventData.endDate || '',
+      startTime: eventData.startTime || '',
+      endTime: eventData.endTime || '',
+      location: eventData.location || '',
+      address: eventData.address || '',
+      category: eventData.category || 'KEGIATAN_BUDAYA',
+      isPublic: eventData.isPublic ?? true,
+      isFeatured: eventData.isFeatured ?? false,
+      maxParticipants: eventData.maxParticipants || null,
+      registrationRequired: eventData.registrationRequired ?? false,
+      registrationDeadline: eventData.registrationDeadline || '',
+      contactPerson: eventData.contactPerson || '',
+      contactPhone: eventData.contactPhone || '',
+      tags: Array.isArray(eventData.tags) ? eventData.tags.join(', ') : '',
+    };
+  };
+
   if (isLoading) {
     return (
       <RoleGuard allowedRoles={['ADMIN']}>
-      <AdminLayout 
-        title="Edit Acara"
-        breadcrumbs={breadcrumbs}
-      >
-        <div className="p-6">
-          <div className="flex items-center justify-center min-h-96">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-500">Memuat data acara...</p>
+        <AdminLayout 
+          title="Edit Acara"
+          breadcrumbs={breadcrumbs}
+        >
+          <div className="p-6">
+            <div className="flex items-center justify-center min-h-96">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <p className="text-gray-500">Memuat data acara...</p>
+              </div>
             </div>
           </div>
-        </div>
-      </AdminLayout>
+        </AdminLayout>
       </RoleGuard>
     );
   }
@@ -44,27 +70,27 @@ const EditEventPage = () => {
   if (error) {
     return (
       <RoleGuard allowedRoles={['ADMIN']}>
-      <AdminLayout 
-        title="Edit Acara"
-        breadcrumbs={breadcrumbs}
-      >
-        <div className="p-6">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-            <div className="text-red-800 font-medium mb-2">
-              Gagal memuat data acara
+        <AdminLayout 
+          title="Edit Acara"
+          breadcrumbs={breadcrumbs}
+        >
+          <div className="p-6">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+              <div className="text-red-800 font-medium mb-2">
+                Gagal memuat data acara
+              </div>
+              <div className="text-red-600 text-sm mb-4">
+                {error instanceof Error ? error.message : 'Terjadi kesalahan saat mengambil data'}
+              </div>
+              <button
+                onClick={() => router.push('/admin/events')}
+                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+              >
+                Kembali ke Daftar Acara
+              </button>
             </div>
-            <div className="text-red-600 text-sm mb-4">
-              {error instanceof Error ? error.message : 'Terjadi kesalahan saat mengambil data'}
-            </div>
-            <button
-              onClick={() => router.push('/admin/events')}
-              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
-            >
-              Kembali ke Daftar Acara
-            </button>
           </div>
-        </div>
-      </AdminLayout>
+        </AdminLayout>
       </RoleGuard>
     );
   }
@@ -72,52 +98,58 @@ const EditEventPage = () => {
   if (!event) {
     return (
       <RoleGuard allowedRoles={['ADMIN']}>
+        <AdminLayout 
+          title="Edit Acara"
+          breadcrumbs={breadcrumbs}
+        >
+          <div className="p-6">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+              <div className="text-gray-800 font-medium mb-2">
+                Acara tidak ditemukan
+              </div>
+              <div className="text-gray-600 text-sm mb-4">
+                Acara dengan ID tersebut tidak ada atau telah dihapus.
+              </div>
+              <button
+                onClick={() => router.push('/admin/events')}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Kembali ke Daftar Acara
+              </button>
+            </div>
+          </div>
+        </AdminLayout>
+      </RoleGuard>
+    );
+  }
+
+  const initialFormData = formatEventForForm(event);
+
+  return (
+    <RoleGuard allowedRoles={['ADMIN']}>
       <AdminLayout 
         title="Edit Acara"
         breadcrumbs={breadcrumbs}
       >
         <div className="p-6">
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
-            <div className="text-gray-800 font-medium mb-2">
-              Acara tidak ditemukan
-            </div>
-            <div className="text-gray-600 text-sm mb-4">
-              Acara dengan ID tersebut tidak ada atau telah dihapus.
-            </div>
-            <button
-              onClick={() => router.push('/admin/events')}
-              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Kembali ke Daftar Acara
-            </button>
+          {/* Page Header */}
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-gray-900">Edit Acara</h1>
+            <p className="text-gray-600 mt-1">
+              Ubah informasi acara: <span className="font-medium">{event.title}</span>
+            </p>
           </div>
+
+          {/* Form */}
+          {initialFormData && (
+            <EventForm 
+              initialData={initialFormData}
+              eventId={eventId}
+              onSuccess={() => router.push('/admin/events')}
+            />
+          )}
         </div>
       </AdminLayout>
-      </RoleGuard>
-    );
-  }
-
-  return (
-    <RoleGuard allowedRoles={['ADMIN']}>
-    <AdminLayout 
-      title="Edit Acara"
-      breadcrumbs={breadcrumbs}
-    >
-      <div className="p-6">
-        {/* Page Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Edit Acara</h1>
-          <p className="text-gray-600 mt-1">
-            Ubah informasi acara: <span className="font-medium">{event.title}</span>
-          </p>
-        </div>
-
-        {/* Form */}
-        <EventForm 
-           
-        />
-      </div>
-    </AdminLayout>
     </RoleGuard>
   );
 };
